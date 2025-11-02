@@ -5,6 +5,7 @@ import BalanceCard from "@/components/BalanceCard";
 import MiningButton from "@/components/MiningButton";
 import MiningStats, { Timer, TrendingUp, Clock, Calendar } from "@/components/MiningStats";
 import BoostCard from "@/components/BoostCard";
+import ParticleBackground from "@/components/ParticleBackground";
 import { UserPlus, Share2, Zap } from "lucide-react";
 import { updateUserProfile, updateMiningBalance } from "@/services/userService";
 import { startMiningSession, stopMiningSession } from "@/services/miningService";
@@ -208,8 +209,9 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen pb-20 bg-background">
-      <div className="max-w-screen-xl mx-auto px-4 py-6 space-y-6">
+    <div className="min-h-screen pb-20 bg-background relative overflow-hidden">
+      <ParticleBackground />
+      <div className="max-w-screen-xl mx-auto px-4 py-6 space-y-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
