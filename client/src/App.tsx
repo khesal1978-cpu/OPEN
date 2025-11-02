@@ -14,7 +14,8 @@ import Leaderboard from "@/pages/Leaderboard";
 import Wallet from "@/pages/Wallet";
 import Profile from "@/pages/Profile";
 import BottomNav from "@/components/BottomNav";
-import { getUserProfile, createUserProfile } from "@/services/userService";
+import { createUserProfile } from "@/services/userService";
+import { useRealtimeProfile } from "@/hooks/useRealtimeProfile";
 
 function Router() {
   return (
@@ -36,18 +37,18 @@ function AppContent() {
   const [showTutorial, setShowTutorial] = useState(false);
   const [initializing, setInitializing] = useState(true);
   const { user, loading } = useAuth();
+  const { profile, loading: profileLoading } = useRealtimeProfile(user?.uid);
 
   useEffect(() => {
-    async function checkUserProfile() {
-      if (user) {
-        const profile = await getUserProfile(user.uid);
+    async function initializeUser() {
+      if (user && !profileLoading) {
         if (!profile) {
           const displayName = user.displayName || user.email?.split('@')[0] || "User";
           await createUserProfile(user.uid, user.email!, displayName);
         }
         
         const hasSeenTutorial = localStorage.getItem(`tutorial_${user.uid}`);
-        if (!hasSeenTutorial) {
+        if (!hasSeenTutorial && profile) {
           setShowTutorial(true);
         }
       }
@@ -55,9 +56,9 @@ function AppContent() {
     }
 
     if (!loading) {
-      checkUserProfile();
+      initializeUser();
     }
-  }, [user, loading]);
+  }, [user, loading, profile, profileLoading]);
 
   const handleTutorialComplete = () => {
     setShowTutorial(false);
@@ -89,12 +90,18 @@ function AppContent() {
     return <SplashScreen onComplete={() => setShowSplash(false)} />;
   }
 
-  if (loading || initializing) {
+  if (loading || (user && initializing)) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5">
         <div className="text-center">
-          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading...</p>
+          <div className="relative mb-6">
+            <div className="w-16 h-16 border-4 border-primary/20 rounded-full absolute inset-0" />
+            <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          </div>
+          <h3 className="text-lg font-semibold mb-2 bg-gradient-to-r from-primary via-purple-500 to-blue-500 bg-clip-text text-transparent">
+            Initializing PingCaset
+          </h3>
+          <p className="text-sm text-muted-foreground">Setting up your mining dashboard...</p>
         </div>
       </div>
     );

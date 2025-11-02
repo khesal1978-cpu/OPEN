@@ -381,3 +381,32 @@
     rgba(147, 51, 234, 0.1) 50%, 
     rgba(59, 130, 246, 0.1) 100%);
 }
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s linear infinite;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  background-size: 1000px 100%;
+}
+
+.animate-gradient-shift {
+  animation: gradient-shift 4s ease infinite;
+  background-size: 200% 200%;
+}

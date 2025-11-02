@@ -26,12 +26,11 @@ export async function createUserProfile(
 ): Promise<UserProfile> {
   const referralCode = generateReferralCode();
   const now = Date.now();
-  const profile: UserProfile = {
+  const profile: any = {
     uid,
     email,
     username,
     referralCode,
-    referredBy,
     createdAt: now,
     totalMined: 0,
     balance: 0,
@@ -39,6 +38,10 @@ export async function createUserProfile(
     activeBoosts: [],
     dailyResetAt: now + 24 * 60 * 60 * 1000,
   };
+
+  if (referredBy) {
+    profile.referredBy = referredBy;
+  }
 
   await setDoc(doc(db, "users", uid), profile);
 

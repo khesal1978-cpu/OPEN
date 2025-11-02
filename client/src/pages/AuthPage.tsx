@@ -150,15 +150,25 @@ export default function AuthPage() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full" data-testid="button-submit" disabled={loading}>
-              {loading ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  {isSignUp ? "Creating account..." : "Signing in..."}
-                </>
-              ) : (
-                isSignUp ? "Sign Up" : "Login"
+            <Button type="submit" className="w-full relative overflow-hidden group" data-testid="button-submit" disabled={loading}>
+              {loading && (
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                  initial={{ x: '-100%' }}
+                  animate={{ x: '100%' }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+                />
               )}
+              <span className="relative z-10">
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin inline" />
+                    {isSignUp ? "Creating account..." : "Signing in..."}
+                  </>
+                ) : (
+                  isSignUp ? "Sign Up" : "Login"
+                )}
+              </span>
             </Button>
           </form>
 
@@ -173,17 +183,27 @@ export default function AuthPage() {
 
           <Button
             variant="outline"
-            className="w-full"
+            className="w-full relative overflow-hidden group hover:border-primary/50 transition-all duration-300"
             onClick={handleGoogleAuth}
             data-testid="button-google"
             disabled={loading}
           >
-            {loading ? (
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-            ) : (
-              <SiGoogle className="w-4 h-4 mr-2" />
+            {loading && (
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent"
+                initial={{ x: '-100%' }}
+                animate={{ x: '100%' }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+              />
             )}
-            Google
+            <span className="relative z-10 flex items-center justify-center">
+              {loading ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <SiGoogle className="w-4 h-4 mr-2" />
+              )}
+              Google
+            </span>
           </Button>
 
           <p className="text-center text-sm text-muted-foreground mt-6">
